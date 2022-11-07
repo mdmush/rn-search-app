@@ -35,6 +35,11 @@ function App() {
         seterrorshow(null);
       }
       setloading(false);
+    } else {
+      seterrorshow('Type user name to search...');
+        setTimeout(() => {
+          seterrorshow(null);
+        }, 3000);
     }
   };
 
