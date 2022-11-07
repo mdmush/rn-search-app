@@ -6,31 +6,46 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   TextInput,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {RED} from '../constants';
 import leaderboard from '../assets/leaderboard.json';
 import {Col, Row, Grid} from 'react-native-easy-grid';
-import { search, sort } from '../functions';
+import {search, sort} from '../functions';
 
 export default function HomeScreen() {
   const [data, setdata] = useState(null);
   const [loading, setloading] = useState(false);
   const [searchtext, setsearchtext] = useState('');
 
-  useEffect(async () => {
+  const fetchData = async () => {
     let leaderboardData = Object.values(leaderboard);
-    let sortedData = await sort(leaderboardData)
+    let sortedData = await sort(leaderboardData);
     setdata(sortedData.slice(0, 10));
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const searchUser = async () => {
-    setloading(true);
-    let leaderboardData = Object.values(leaderboard);
-    let sortedData = await sort(leaderboardData)
-    let searchedData = await search(sortedData, searchtext);
-    setdata(searchedData);
-    setloading(false);
+    if (searchtext !== '') {
+      setloading(true);
+      let leaderboardData = Object.values(leaderboard);
+      let sortedData = await sort(leaderboardData);
+      let {searchedData, error, errorText} = await search(
+        sortedData,
+        searchtext,
+      );
+      setdata(searchedData);
+      if (error) {
+        ToastAndroid.show(errorText, ToastAndroid.SHORT);
+      }
+      setloading(false);
+    } else {
+      ToastAndroid.show('Type user name to search...', ToastAndroid.SHORT);
+    }
   };
 
   const renderLoading = () => {
@@ -86,20 +101,49 @@ export default function HomeScreen() {
               </Row>
               {data &&
                 data.map((usr, usrIndex) => {
-                  let isSearchedUser = usr.isSearchedUser && usr.isSearchedUser === true
+                  let isSearchedUser =
+                    usr.isSearchedUser && usr.isSearchedUser === true;
                   return (
                     <Row key={usr.uid}>
                       <Col className="justify-center">
-                        <Text style={isSearchedUser ? {color: RED, fontWeight: '600'} : {}}>{usr.name}</Text>
+                        <Text
+                          style={
+                            isSearchedUser
+                              ? {color: RED, fontWeight: '600'}
+                              : {}
+                          }>
+                          {usr.name}
+                        </Text>
                       </Col>
                       <Col className="border-l justify-center items-center border-[#ccc]">
-                        <Text style={isSearchedUser ? {color: RED, fontWeight: '600'} : {}}>{usr.rank ? usr.rank + 1 : usrIndex + 1}</Text>
+                        <Text
+                          style={
+                            isSearchedUser
+                              ? {color: RED, fontWeight: '600'}
+                              : {}
+                          }>
+                          {usr.rank ? usr.rank + 1 : usrIndex + 1}
+                        </Text>
                       </Col>
                       <Col className="border-l justify-center items-center border-[#ccc]">
-                        <Text style={isSearchedUser ? {color: RED, fontWeight: '600'} : {}}>{usr.bananas}</Text>
+                        <Text
+                          style={
+                            isSearchedUser
+                              ? {color: RED, fontWeight: '600'}
+                              : {}
+                          }>
+                          {usr.bananas}
+                        </Text>
                       </Col>
                       <Col className="border-l justify-center items-center border-[#ccc]">
-                        <Text style={isSearchedUser ? {color: RED, fontWeight: '600'} : {}}>{isSearchedUser ? 'True' : 'False'}</Text>
+                        <Text
+                          style={
+                            isSearchedUser
+                              ? {color: RED, fontWeight: '600'}
+                              : {}
+                          }>
+                          {isSearchedUser ? 'True' : 'False'}
+                        </Text>
                       </Col>
                     </Row>
                   );
