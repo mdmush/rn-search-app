@@ -4,9 +4,11 @@ This search app is built in ReactJS & React Native using react-hooks.
 
 Additional technology used: <a href="https://tailwindcss.com/">TailwindCSS</a>
 
-### <a href="https://i.diawi.com/XqHGFV">Install APK (Android)</a>
+## Demo
 
-### <a href="https://rn-search-app.vercel.app/">WebApp LIVE</a>
+### Mobile App (React Native): <a href="https://i.diawi.com/XqHGFV">Install APK (Android)</a> or <a href="https://github.com/mdmush/rn-search-app/raw/master/Builds/mobileapp-v1.0.apk">Download APK (Android)</a>
+
+### Web App (ReactJS): <a href="https://rn-search-app.vercel.app/">LIVE</a>
 
 ## Screenshots
 
