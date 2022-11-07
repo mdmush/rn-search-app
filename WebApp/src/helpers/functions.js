@@ -3,32 +3,32 @@ function search(data, text) {
     return new Promise((resolve, reject) => {
       let searchedUser = null;
       let searchedIndex = null;
-      data.map((d, dIndex) => {
-        if (d.name.includes(text)) {
+      data.forEach((d, dIndex) => {
+        if (d.name.toLowerCase().includes(text.toLowerCase())) {
           searchedUser = d;
           searchedIndex = dIndex;
         }
       });
       if (searchedUser !== null) {
         if (searchedIndex > 9) {
-          resolve([
+          resolve({searchedData: [
             ...data.slice(0, 9),
             {...searchedUser, rank: searchedIndex, isSearchedUser: true},
-          ]);
+          ], error: false});
         } else {
           data[searchedIndex] = {
             ...searchedUser,
             rank: searchedIndex,
             isSearchedUser: true,
           };
-          resolve(data.slice(0, 10));
+          resolve({searchedData: data.slice(0, 10), error: false});
         }
       } else {
-        resolve(data.slice(0, 10));
+        resolve({searchedData: data.slice(0, 10), error: true, errorText: 'User Not Found'});
       }
     });
   } catch (error) {
-    return [];
+    return({searchedData: data.slice(0, 10), error: true, errorText: 'Data Error!'});
   }
 }
 
